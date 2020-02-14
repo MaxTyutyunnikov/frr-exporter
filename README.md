@@ -15,13 +15,16 @@ Deploy prometheus [frr exporter](https://github.com/tynany/frr_exporter) using a
 
 All variables which can be overridden are stored in [defaults/main.yml](defaults/main.yml) file as well as in table below.
 
-| Name                               | Default Value      | Description                                                                                                                                                                                                                  |
-| ---------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `frr_exporter_version`             | 0.2.3              | Frr exporter package version. Also accepts latest as parameter.                                                                                                                                                              |
-| `frr_exporter_binary_local_dir`    | ""                 | Allows to use local packages instead of ones distributed on github. As parameter it takes a directory where `frr_exporter` binary is stored on host on which ansible is ran. This overrides `frr_exporter_version` parameter |
-| `frr_exporter_web_listen_address`  | "0.0.0.0:9100"     | Address on which frr exporter will listen                                                                                                                                                                                    |
-| `frr_exporter_enabled_collectors`  | [] | List of additionally enabled collectors. It adds collectors to [those enabled by default](https://github.com/tynany/frr_exporter#enabled-by-default)                                                                         |
-| `frr_exporter_disabled_collectors` | []                 | List of disabled collectors. By default frr_exporter disables collectors listed [here](https://github.com/tynany/frr_exporter#disabled-by-default).                                                                          |
+| Name | Default Value | Description |
+| ----- | ----- | ----- |
+| `frr_exporter_version` | 0.2.3 | Frr exporter package version. Also accepts latest as parameter. |
+| `_frr_exporter_binary_local_dir` | "/usr/local/bin" | Allows to use local packages instead of ones distributed on github. As parameter it takes a directory where `frr_exporter` binary is stored on host on which ansible is ran. This overrides `frr_exporter_version` parameter |
+| `frr_exporter_web_listen_address` | "0.0.0.0:9342" | Address on which frr exporter will listen |
+| `frr_exporter_enabled_collectors` | [ ospf, bgp, bgp.peer-types, bgp.peer-descriptions ] | List of additionally enabled collectors. It adds collectors to [those enabled by default](https://github.com/tynany/frr_exporter#enabled-by-default) |
+| `frr_exporter_disabled_collectors` | [] | List of disabled collectors. By default frr_exporter disables collectors listed [here](https://github.com/tynany/frr_exporter#disabled-by-default). |
+| `_frr_exporter_system_group` | "frr-exp" | Group which will be used in systemd config to start frr_exporter | 
+| `_frr_exporter_system_user` | "frr-exp" | User which will be used in systemd config to start frr_exporter |
+| `frr_exporter_create_usergroup` | true | Create user and group im case true |
 
 ## Example
 
