@@ -1,0 +1,17 @@
+---
+frr_exporter_version: 0.2.3
+frr_exporter_binary_local_dir: ""
+frr_exporter_web_listen_address: "0.0.0.0:9342"
+
+frr_exporter_enabled_collectors:
+  - bgp
+  - bgp.peer-types
+  - bgp.peer-descriptions
+  - ospf
+
+frr_exporter_disabled_collectors: []
+
+_frr_exporter_binary_install_dir: "/usr/local/bin"
+_frr_exporter_system_group: "frr-exp"
+_frr_exporter_system_user: "{{ _frr_exporter_system_group }}"
+frr_exporter_create_usergroup: true

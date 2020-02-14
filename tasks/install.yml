@@ -1,0 +1,67 @@
+---
+- name: Create the frr_exporter group
+  group:
+    name: "{{ _frr_exporter_system_group }}"
+    state: present
+    system: true
+  when:
+    - _frr_exporter_system_group != "root"
+    - frr_exporter_create_usergroup
+
+- name: Create the frr_exporter user
+  user:
+    name: "{{ _frr_exporter_system_user }}"
+    groups: "{{ _frr_exporter_system_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+    home: /
+  when:
+    - _frr_exporter_system_user != "root"
+    - frr_exporter_create_usergroup
+
+- name: Download frr_exporter from localhost
+  block:
+    - name: Download frr_exporter binary to local folder
+      become: false
+      get_url:
+        url: "https://github.com/tynany/frr_exporter/releases/download/v{{ frr_exporter_version }}/frr_exporter_{{ frr_exporter_version }}_linux_{{ go_arch }}.tar.gz"
+        dest: "/tmp/frr_exporter_{{ frr_exporter_version }}_linux_{{ go_arch }}.tar.gz"
+        #checksum: "sha256:{{ frr_exporter_checksum }}"
+      register: _download_binary
+      until: _download_binary is succeeded
+      retries: 5
+      delay: 2
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Unpack frr_exporter binary
+      become: false
+      unarchive:
+        src: "/tmp/frr_exporter_{{ frr_exporter_version }}_linux_{{ go_arch }}.tar.gz"
+        dest: "/tmp"
+        creates: "/tmp/frr_exporter_{{ frr_exporter_version }}_linux_{{ go_arch }}/frr_exporter"
+      delegate_to: localhost
+      check_mode: false
+
+    - name: Propagate frr_exporter binaries
+      copy:
+        src: "/tmp/frr_exporter_{{ frr_exporter_version }}_linux_{{ go_arch }}/frr_exporter"
+        dest: "{{ _frr_exporter_binary_install_dir }}/frr_exporter"
+        mode: 0755
+        owner: root
+        group: root
+      notify: restart frr_exporter
+      when: not ansible_check_mode
+  when: frr_exporter_binary_local_dir | length == 0
+
+- name: propagate locally distributed frr_exporter binary
+  copy:
+    src: "{{ frr_exporter_binary_local_dir }}/frr_exporter"
+    dest: "{{ _frr_exporter_binary_install_dir }}/frr_exporter"
+    mode: 0755
+    owner: root
+    group: root
+  when: frr_exporter_binary_local_dir | length > 0
+  notify: restart frr_exporter

@@ -1,0 +1,33 @@
+---
+- import_tasks: preflight.yml
+  tags:
+    - frr_exporter_install
+    - frr_exporter_configure
+    - frr_exporter_run
+
+- import_tasks: install.yml
+  become: true
+  when: (not __frr_exporter_is_installed.stat.exists) or (__frr_exporter_current_version_output.stderr_lines[0].split(" ")[2] != frr_exporter_version)
+  tags:
+    - frr_exporter_install
+
+- import_tasks: selinux.yml
+  become: true
+  when: ansible_selinux.status == "enabled"
+  tags:
+    - frr_exporter_configure
+
+- import_tasks: configure.yml
+  become: true
+  tags:
+    - frr_exporter_configure
+
+- name: Ensure Frr Exporter is enabled on boot
+  become: true
+  systemd:
+    daemon_reload: true
+    name: frr_exporter
+    enabled: true
+    state: started
+  tags:
+    - frr_exporter_run
