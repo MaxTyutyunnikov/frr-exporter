@@ -29,5 +29,6 @@ galaxy_info:
     - exporter
     - metrics
     - system
+    - networking
 
 dependencies: []
