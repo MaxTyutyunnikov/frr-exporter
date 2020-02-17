@@ -7,9 +7,9 @@ StartLimitInterval=0
 
 [Service]
 Type=simple
-User={{ _frr_exporter_system_user }}
-Group={{ _frr_exporter_system_group }}
-ExecStart={{ _frr_exporter_binary_install_dir }}/frr_exporter \
+User={{ frr_exporter_system_user }}
+Group={{ frr_exporter_system_group }}
+ExecStart={{ frr_exporter_binary_install_dir }}/frr_exporter \
 {% for collector in frr_exporter_enabled_collectors -%}
 {%   if not collector is mapping %}
     --collector.{{ collector }} \

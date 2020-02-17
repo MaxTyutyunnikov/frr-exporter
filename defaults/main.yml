@@ -11,7 +11,7 @@ frr_exporter_enabled_collectors:
 
 frr_exporter_disabled_collectors: []
 
-_frr_exporter_binary_install_dir: "/usr/local/bin"
-_frr_exporter_system_group: "frr-exp"
-_frr_exporter_system_user: "{{ _frr_exporter_system_group }}"
+frr_exporter_binary_install_dir: "/usr/local/bin"
+frr_exporter_system_group: "frr-exp"
+frr_exporter_system_user: "{{ frr_exporter_system_group }}"
 frr_exporter_create_usergroup: true

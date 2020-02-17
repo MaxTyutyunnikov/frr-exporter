@@ -29,14 +29,14 @@
 
 - name: Check if frr_exporter is installed
   stat:
-    path: "{{ _frr_exporter_binary_install_dir }}/frr_exporter"
+    path: "{{ frr_exporter_binary_install_dir }}/frr_exporter"
   register: __frr_exporter_is_installed
   check_mode: false
   tags:
     - frr_exporter_install
 
 - name: Gather currently installed frr_exporter version (if any)
-  command: "{{ _frr_exporter_binary_install_dir }}/frr_exporter --version"
+  command: "{{ frr_exporter_binary_install_dir }}/frr_exporter --version"
   args:
     warn: false
   changed_when: false
